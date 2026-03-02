@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('type');           // e.g., "Vehicle" or "Electronics"
             $table->string('serial_number')->nullable();
             $table->string('license_plate')->nullable(); // Only for cars
-            $table->string('status')->default('assigned');
+            $table->string('status')->default('Pending Acknowledgment'); // Force acknowledgment workflow
             $table->timestamps();
         });
     }

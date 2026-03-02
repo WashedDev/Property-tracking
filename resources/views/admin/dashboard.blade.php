@@ -1,17 +1,29 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto relative">
 
-        <div class="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 animate-fade-in-up">
-            <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm hidden sm:block">
-                <img src="{{ asset('images/ctech-int-logo.png') }}" alt="Ctech Systems Logo"
-                    class="h-8 sm:h-10 w-auto object-contain">
+        <div
+            class="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in-up">
+            <div class="flex items-center gap-4">
+                <div class="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-sm hidden sm:block">
+                    <img src="{{ asset('images/ctech-int-logo.png') }}" alt="Ctech Systems Logo"
+                        class="h-8 sm:h-10 w-auto object-contain">
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-ctech-dark tracking-tight">Admin Dashboard</h2>
+                    <p class="text-slate-500 text-xs sm:text-sm mt-0.5 sm:mt-1">System Overview & Management</p>
+                </div>
             </div>
-            <div>
-                <h2 class="text-xl sm:text-2xl font-bold text-ctech-dark tracking-tight">Admin Dashboard</h2>
-                <p class="text-slate-500 text-xs sm:text-sm mt-0.5 sm:mt-1">System Overview & Management</p>
-            </div>
+
+            <button onclick="document.getElementById('assignModal').style.display='flex'"
+                class="btn-ctech px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Assign New Asset
+            </button>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
@@ -141,4 +153,134 @@
             </div>
         </div>
     </div>
+
+    <div id="assignModal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm transition-opacity">
+        <div class="card-panel w-full max-w-lg p-6 sm:p-8 modal-animate relative max-h-[90vh] overflow-y-auto">
+
+            <button onclick="document.getElementById('assignModal').style.display='none'"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-ctech-dark flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-ctech-cyan"></div>
+                    Assign New Asset
+                </h3>
+                <p class="text-slate-500 text-sm mt-1">Officially allocate hardware or vehicles to an employee.</p>
+            </div>
+
+            <form method="POST" action="{{ route('properties.store') }}">
+                @csrf
+
+                <div class="mb-5 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Assign To Employee</label>
+                    <select name="user_id" required
+                        class="sleek-input w-full px-4 py-2.5 rounded-lg text-sm cursor-pointer font-medium">
+                        <option value="" disabled selected>Select an employee from directory...</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Property Name</label>
+                        <input type="text" name="name" required placeholder="e.g. Work MacBook"
+                            class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Model</label>
+                        <input type="text" name="model" required placeholder="e.g. Pro 14-inch"
+                            class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Type</label>
+                        <select name="type" id="admin_property_type" onchange="toggleAdminVehicleFields()"
+                            class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm cursor-pointer">
+                            <option value="Electronics">Electronics</option>
+                            <option value="Vehicle">Vehicle</option>
+                            <option value="Furniture">Furniture</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Quantity</label>
+                        <input type="number" name="quantity" value="1" min="1"
+                            class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm">
+                    </div>
+
+                    <div id="admin_serial_div">
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Serial Number</label>
+                        <input type="text" name="serial_number" class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm">
+                    </div>
+
+                    <div id="admin_license_div" class="hidden">
+                        <label class="block text-sm font-bold text-red-500 mb-1.5">License Plate (Required)</label>
+                        <input type="text" name="license_plate"
+                            class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm border-red-200 focus:border-red-400">
+                    </div>
+
+                    <div class="border-t border-slate-100 pt-4 mt-2 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-1.5">Procurement Date</label>
+                            <input type="date" name="procurement_date"
+                                class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm text-slate-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-600 mb-1.5">Warranty Expiration</label>
+                            <input type="date" name="warranty_expiration"
+                                class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm text-slate-500">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-semibold text-slate-600 mb-1.5">Estimated Value (MWK)</label>
+                            <input type="number" step="0.01" name="estimated_value" placeholder="e.g. 1500000"
+                                class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-ctech w-full py-3.5 rounded-xl font-semibold text-sm">
+                    Assign Asset to Employee
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Form field toggler for the Admin modal
+        function toggleAdminVehicleFields() {
+            const type = document.getElementById('admin_property_type').value;
+            const licenseDiv = document.getElementById('admin_license_div');
+            const serialDiv = document.getElementById('admin_serial_div');
+
+            if (type === 'Vehicle') {
+                licenseDiv.classList.remove('hidden');
+                serialDiv.classList.add('hidden');
+                licenseDiv.querySelector('input').setAttribute('required', 'true');
+                licenseDiv.querySelector('input').removeAttribute('required');
+            } else {
+                licenseDiv.classList.add('hidden');
+                serialDiv.classList.remove('hidden');
+                licenseDiv.querySelector('input').removeAttribute('required');
+                serialDiv.querySelector('input').setAttribute('required', 'true');
+            }
+        }
+
+        // Close modal if user clicks on the backdrop outside the card
+        document.addEventListener('click', function (event) {
+            let assignModal = document.getElementById('assignModal');
+            if (event.target === assignModal) {
+                assignModal.style.display = "none";
+            }
+        });
+    </script>
 @endsection

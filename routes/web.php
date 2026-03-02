@@ -25,6 +25,12 @@ Route::middleware(['auth'])->group(function () {
     // Shared Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    // User Asset PDF Download
+    Route::get('/my-assets/pdf', [App\Http\Controllers\PropertyController::class, 'downloadPdf'])->name('user.assets.pdf');
+
+    // Digital Acknowledgment Route
+    Route::patch('/properties/{property}/acknowledge', [App\Http\Controllers\PropertyController::class, 'acknowledge'])->name('properties.acknowledge');
+
     // Employee Routes
     Route::get('/dashboard', [PropertyController::class, 'index'])->name('dashboard');
     Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
