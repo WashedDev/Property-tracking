@@ -1,124 +1,127 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
-        <div class="lg:col-span-1 animate-fade-in-up">
-            <div
-                class="glass-panel rounded-3xl p-8 sticky top-28 overflow-hidden relative transition-all duration-300 hover:shadow-lg">
-                <div class="absolute -top-12 -right-12 w-32 h-32 bg-ctech-green rounded-full filter blur-3xl opacity-20">
-                </div>
+        <div class="lg:col-span-1 animate-fade-in-up order-2 lg:order-1">
+            <div class="card-panel p-6 sm:p-8 lg:sticky lg:top-28">
+                <h3 class="text-lg font-bold text-ctech-dark mb-5 sm:mb-6 flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-ctech-cyan"></div>
+                    Register New Property
+                </h3>
 
-                <div class="relative z-10">
-                    <h3 class="text-xl font-bold text-ctech-dark mb-6 flex items-center gap-3">
-                        <span class="w-1.5 h-6 bg-gradient-to-b from-ctech-cyan to-ctech-green rounded-full"></span>
-                        Register New Property
-                    </h3>
+                <form method="POST" action="{{ route('properties.store') }}">
+                    @csrf
+                    <div class="mb-4 sm:mb-5">
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5 sm:mb-2">Property Name</label>
+                        <input type="text" name="name" required placeholder="e.g. Office Car"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl text-sm">
+                    </div>
 
-                    <form method="POST" action="{{ route('properties.store') }}">
-                        @csrf
-                        <div class="mb-5">
-                            <label class="block text-sm font-semibold text-ctech-grey mb-1.5">Property Name</label>
-                            <input type="text" name="name" required placeholder="e.g. Office Car"
-                                class="glass-input w-full px-4 py-3 rounded-xl text-sm">
-                        </div>
+                    <div class="mb-4 sm:mb-5">
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5 sm:mb-2">Model</label>
+                        <input type="text" name="model" required placeholder="e.g. Toyota Corolla"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl text-sm">
+                    </div>
 
-                        <div class="mb-5">
-                            <label class="block text-sm font-semibold text-ctech-grey mb-1.5">Model</label>
-                            <input type="text" name="model" required placeholder="e.g. Toyota Corolla"
-                                class="glass-input w-full px-4 py-3 rounded-xl text-sm">
-                        </div>
+                    <div class="mb-4 sm:mb-5">
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5 sm:mb-2">Type</label>
+                        <select name="type" id="property_type" onchange="toggleVehicleFields()"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl text-sm cursor-pointer">
+                            <option value="Electronics">Electronics</option>
+                            <option value="Vehicle">Vehicle</option>
+                            <option value="Furniture">Furniture</option>
+                        </select>
+                    </div>
 
-                        <div class="mb-5">
-                            <label class="block text-sm font-semibold text-ctech-grey mb-1.5">Type</label>
-                            <select name="type" id="property_type" onchange="toggleVehicleFields()"
-                                class="glass-input w-full px-4 py-3 rounded-xl text-sm appearance-none cursor-pointer">
-                                <option value="Electronics">Electronics</option>
-                                <option value="Vehicle">Vehicle</option>
-                                <option value="Furniture">Furniture</option>
-                            </select>
-                        </div>
+                    <div class="mb-4 sm:mb-5">
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5 sm:mb-2">Quantity</label>
+                        <input type="number" name="quantity" value="1" min="1"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl text-sm">
+                    </div>
 
-                        <div class="mb-5">
-                            <label class="block text-sm font-semibold text-ctech-grey mb-1.5">Quantity</label>
-                            <input type="number" name="quantity" value="1" min="1"
-                                class="glass-input w-full px-4 py-3 rounded-xl text-sm">
-                        </div>
+                    <div id="serial_div" class="mb-4 sm:mb-5">
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5 sm:mb-2">Serial Number</label>
+                        <input type="text" name="serial_number"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl text-sm">
+                    </div>
 
-                        <div id="serial_div" class="mb-5">
-                            <label class="block text-sm font-semibold text-ctech-grey mb-1.5">Serial Number</label>
-                            <input type="text" name="serial_number" class="glass-input w-full px-4 py-3 rounded-xl text-sm">
-                        </div>
+                    <div id="license_div" class="mb-4 sm:mb-5 hidden">
+                        <label class="block text-sm font-bold text-red-500 mb-1.5 sm:mb-2">License Plate (Required)</label>
+                        <input type="text" name="license_plate"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl text-sm border-red-200 focus:border-red-400">
+                    </div>
 
-                        <div id="license_div" class="mb-5 hidden">
-                            <label class="block text-sm font-bold text-red-500 mb-1.5">License Plate</label>
-                            <input type="text" name="license_plate"
-                                class="glass-input w-full px-4 py-3 rounded-xl text-sm border-red-200 focus:border-red-400">
-                        </div>
-
-                        <button type="submit"
-                            class="btn-ctech w-full py-3.5 rounded-xl font-bold mt-4 tracking-wide text-sm transform transition hover:-translate-y-1">
-                            Save Property
-                        </button>
-                    </form>
-                </div>
+                    <button type="submit" class="btn-ctech w-full py-3 sm:py-3.5 rounded-xl font-medium mt-2 text-sm">
+                        Save Property
+                    </button>
+                </form>
             </div>
         </div>
 
-        <div class="lg:col-span-2 animate-fade-in-up delay-200">
-            <div class="glass-panel rounded-3xl overflow-hidden relative min-h-[500px]">
-                <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-ctech-cyan rounded-full filter blur-3xl opacity-20">
-                </div>
-
-                <div class="p-8 border-b border-white/60 flex justify-between items-center relative z-10 bg-white/20">
-                    <h3 class="text-xl font-bold text-ctech-dark">My Registered Items</h3>
+        <div class="lg:col-span-2 animate-fade-in-up delay-100 order-1 lg:order-2">
+            <div class="card-panel overflow-hidden">
+                <div
+                    class="p-5 sm:p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white">
+                    <h3 class="text-lg font-bold text-ctech-dark">My Registered Items</h3>
                     <span
-                        class="bg-white/80 text-ctech-cyan text-xs px-4 py-2 rounded-full border border-ctech-cyan/20 font-bold shadow-sm">
-                        {{ $properties->count() }} Assets
+                        class="bg-slate-50 text-slate-600 text-xs px-3 py-1.5 rounded-lg border border-slate-200 font-semibold self-start sm:self-auto">
+                        {{ $properties->count() }} Total
                     </span>
                 </div>
 
-                <div class="overflow-x-auto relative z-10 p-4">
-                    <table class="w-full text-left border-collapse">
+                <div class="overflow-x-auto w-full">
+                    <table class="w-full text-left border-collapse min-w-[500px]">
                         <thead>
-                            <tr class="text-ctech-grey text-xs uppercase tracking-wider border-b border-gray-200/50">
-                                <th class="p-4 font-semibold">Property</th>
+                            <tr
+                                class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4 font-semibold">Property Details</th>
                                 <th class="p-4 font-semibold">Identifier</th>
                                 <th class="p-4 font-semibold">Type</th>
-                                <th class="p-4 font-semibold">Status</th>
+                                <th class="p-4 font-semibold text-right">Status</th>
                             </tr>
                         </thead>
                         <tbody class="text-sm">
                             @forelse($properties as $index => $property)
-                                <tr class="border-b border-gray-100/50 hover:bg-white/60 transition-all duration-300 hover:shadow-sm hover:scale-[1.01] transform cursor-default animate-fade-in-up"
-                                    style="animation-delay: {{ 200 + ($index * 100) }}ms;">
+                                <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors animate-fade-in-up"
+                                    style="animation-delay: {{ 100 + ($index * 50) }}ms;">
                                     <td class="p-4">
-                                        <div class="font-bold text-ctech-dark">{{ $property->name }}</div>
-                                        <div class="text-xs text-gray-500 mt-1">{{ $property->model }}</div>
-                                    </td>
-                                    <td
-                                        class="p-4 font-mono text-ctech-cyan font-semibold bg-white/30 rounded-lg m-2 inline-block">
-                                        {{ $property->type == 'Vehicle' ? $property->license_plate : $property->serial_number }}
+                                        <div class="font-bold text-ctech-dark whitespace-nowrap">{{ $property->name }}</div>
+                                        <div class="text-xs text-slate-500 mt-1">{{ $property->model }}</div>
                                     </td>
                                     <td class="p-4">
                                         <span
-                                            class="px-3 py-1 rounded-full bg-ctech-green/10 text-ctech-green text-xs font-bold border border-ctech-green/20">
-                                            {{ $property->type }}
+                                            class="font-mono text-slate-600 bg-slate-100 px-2 py-1 rounded text-xs border border-slate-200 whitespace-nowrap">
+                                            {{ $property->type == 'Vehicle' ? $property->license_plate : $property->serial_number }}
                                         </span>
                                     </td>
                                     <td class="p-4">
-                                        <span class="flex items-center gap-2 text-ctech-cyan text-xs font-bold">
-                                            <span class="w-2 h-2 rounded-full bg-ctech-cyan animate-pulse"></span>
-                                            Registered
+                                        <span
+                                            class="px-2.5 py-1 rounded-md bg-green-50 text-ctech-green text-xs font-semibold border border-green-100">
+                                            {{ $property->type }}
+                                        </span>
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <span
+                                            class="inline-flex items-center justify-end gap-1.5 text-ctech-cyan text-xs font-semibold">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-ctech-cyan"></span>
+                                            Active
                                         </span>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="p-12 text-center text-gray-400">
-                                        <div class="text-4xl mb-3 opacity-50 transform hover:scale-110 transition duration-500">
-                                            📦</div>
-                                        <p class="font-medium text-ctech-grey">No properties registered yet.</p>
+                                    <td colspan="4" class="p-10 sm:p-16 text-center">
+                                        <div
+                                            class="w-12 sm:w-16 h-12 sm:h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
+                                            <svg class="w-5 sm:w-6 h-5 sm:h-6 text-slate-400" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                            </svg>
+                                        </div>
+                                        <p class="font-medium text-slate-500 text-sm sm:text-base">No properties registered yet.
+                                        </p>
                                     </td>
                                 </tr>
                             @endforelse
@@ -139,7 +142,7 @@
                 licenseDiv.classList.remove('hidden');
                 serialDiv.classList.add('hidden');
                 licenseDiv.querySelector('input').setAttribute('required', 'true');
-                serialDiv.querySelector('input').removeAttribute('required');
+                licenseDiv.querySelector('input').removeAttribute('required');
             } else {
                 licenseDiv.classList.add('hidden');
                 serialDiv.classList.remove('hidden');

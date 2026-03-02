@@ -1,74 +1,72 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="max-w-3xl mx-auto">
-        <div class="glass-panel rounded-3xl p-10 shadow-2xl relative overflow-hidden mt-8">
+    <div class="max-w-3xl mx-auto animate-fade-in-up">
+        <div class="card-panel p-6 sm:p-10 mt-2 sm:mt-6">
 
-            <div class="relative z-10">
-                <div class="mb-10 text-center">
-                    <img src="{{ asset('images/ctech-int-logo.png') }}" alt="Ctech Systems Logo"
-                        class="h-16 w-auto mx-auto mb-6 object-contain">
+            <div class="mb-6 sm:mb-8 text-center border-b border-slate-100 pb-6 sm:pb-8">
+                <img src="{{ asset('images/ctech-int-logo.png') }}" alt="Ctech Systems Logo"
+                    class="h-10 sm:h-12 w-auto mx-auto mb-4 sm:mb-5 object-contain">
+                <h2 class="text-xl sm:text-2xl font-bold text-ctech-dark">Register New Asset</h2>
+                <p class="text-slate-500 text-xs sm:text-sm mt-1">Add a new item to the company inventory</p>
+            </div>
 
-                    <h2 class="text-3xl font-bold text-ctech-dark">Register Property</h2>
-                    <p class="text-ctech-grey text-sm mt-2 font-medium">Add a new asset to the Ctech inventory system</p>
+            <form method="POST" action="{{ route('properties.store') }}">
+                @csrf
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5 sm:mb-2">Property Name</label>
+                        <input type="text" name="name" required placeholder="e.g., Company Laptop"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5 sm:mb-2">Model</label>
+                        <input type="text" name="model" required placeholder="e.g., MacBook Pro 16"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5 sm:mb-2">Type</label>
+                        <select name="type" id="property_type" onchange="toggleVehicleFields()"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl cursor-pointer">
+                            <option value="Electronics">Electronics</option>
+                            <option value="Vehicle">Vehicle</option>
+                            <option value="Furniture">Furniture</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5 sm:mb-2">Quantity</label>
+                        <input type="number" name="quantity" value="1" min="1"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl">
+                    </div>
+
+                    <div id="serial_div">
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5 sm:mb-2">Serial Number</label>
+                        <input type="text" name="serial_number" placeholder="Enter S/N"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl">
+                    </div>
+
+                    <div id="license_div" class="hidden">
+                        <label class="block text-sm font-bold text-red-500 mb-1.5 sm:mb-2">License Plate (Required)</label>
+                        <input type="text" name="license_plate" placeholder="e.g., KA 1234"
+                            class="sleek-input w-full px-4 py-2.5 sm:py-3 rounded-xl border-red-200 focus:border-red-400">
+                    </div>
                 </div>
 
-                <form method="POST" action="{{ route('properties.store') }}">
-                    @csrf
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/20 p-6 rounded-2xl border border-white/50">
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-semibold text-ctech-grey mb-2">Property Name</label>
-                            <input type="text" name="name" required placeholder="e.g., Office Car, Work Laptop"
-                                class="glass-input w-full px-4 py-3.5 rounded-xl">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold text-ctech-grey mb-2">Model</label>
-                            <input type="text" name="model" required placeholder="e.g., Dell XPS 15"
-                                class="glass-input w-full px-4 py-3.5 rounded-xl">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold text-ctech-grey mb-2">Type</label>
-                            <select name="type" id="property_type" onchange="toggleVehicleFields()"
-                                class="glass-input w-full px-4 py-3.5 rounded-xl appearance-none cursor-pointer">
-                                <option value="Electronics">Electronics</option>
-                                <option value="Vehicle">Vehicle</option>
-                                <option value="Furniture">Furniture</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold text-ctech-grey mb-2">Quantity</label>
-                            <input type="number" name="quantity" value="1" min="1"
-                                class="glass-input w-full px-4 py-3.5 rounded-xl">
-                        </div>
-
-                        <div id="serial_div">
-                            <label class="block text-sm font-semibold text-ctech-grey mb-2">Serial Number</label>
-                            <input type="text" name="serial_number" placeholder="Enter S/N"
-                                class="glass-input w-full px-4 py-3.5 rounded-xl">
-                        </div>
-
-                        <div id="license_div" class="hidden">
-                            <label class="block text-sm font-bold text-red-500 mb-2">License Plate (Required)</label>
-                            <input type="text" name="license_plate" placeholder="e.g., KA 1234"
-                                class="glass-input w-full px-4 py-3.5 rounded-xl border-red-200 focus:border-red-400">
-                        </div>
-                    </div>
-
-                    <div class="mt-8 pt-4">
-                        <button type="submit" class="btn-ctech w-full py-4 rounded-xl font-bold text-lg shadow-lg">
-                            Save to Inventory
-                        </button>
-                        <a href="{{ route('dashboard') }}"
-                            class="block text-center text-ctech-grey text-sm mt-5 hover:text-ctech-cyan font-semibold transition">
-                            &larr; Cancel and return to Dashboard
-                        </a>
-                    </div>
-                </form>
-            </div>
+                <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+                    <button type="submit"
+                        class="btn-ctech w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm">
+                        Save to Inventory
+                    </button>
+                    <a href="{{ route('dashboard') }}"
+                        class="text-slate-500 hover:text-ctech-dark text-sm font-medium transition text-center w-full sm:w-auto">
+                        Cancel and return
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -82,12 +80,12 @@
                 licenseDiv.classList.remove('hidden');
                 serialDiv.classList.add('hidden');
                 licenseDiv.querySelector('input').setAttribute('required', 'true');
-                serialDiv.querySelector('input').removeAttribute('required');
+                licenseDiv.querySelector('input').removeAttribute('required');
             } else {
                 licenseDiv.classList.add('hidden');
                 serialDiv.classList.remove('hidden');
                 licenseDiv.querySelector('input').removeAttribute('required');
-                serialDiv.querySelector('input').setAttribute('required', 'true');
+                licenseDiv.querySelector('input').setAttribute('required', 'true');
             }
         }
         document.addEventListener('DOMContentLoaded', toggleVehicleFields);
