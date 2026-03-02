@@ -29,7 +29,6 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Soft light background to make the glass stand out */
             background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
             background-attachment: fixed;
             color: #333333;
@@ -38,7 +37,6 @@
             flex-direction: column;
         }
 
-        /* Refined Light Mode Glassmorphism */
         .glass-panel {
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(24px);
@@ -59,13 +57,8 @@
         .glass-input:focus {
             background: rgba(255, 255, 255, 1);
             border-color: #1bb1e7;
-            /* ctech-cyan */
             outline: none;
             box-shadow: 0 0 0 3px rgba(27, 177, 231, 0.2);
-        }
-
-        .glass-input::placeholder {
-            color: #9ca3af;
         }
 
         .btn-ctech {
@@ -81,28 +74,63 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(162, 208, 107, 0.4);
             background: linear-gradient(135deg, #1598c9, #8cbb55);
-            /* slightly darker */
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* --- NEW ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        ::-webkit-scrollbar-track {
-            background: transparent;
+        @keyframes modalPop {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
+        .animate-fade-in-up {
+            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #1bb1e7;
+        .modal-animate {
+            animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* Animated Background Orbs */
+        /* Animation Delays for staggered loading */
+        .delay-100 {
+            animation-delay: 100ms;
+        }
+
+        .delay-200 {
+            animation-delay: 200ms;
+        }
+
+        .delay-300 {
+            animation-delay: 300ms;
+        }
+
+        .delay-400 {
+            animation-delay: 400ms;
+        }
+
+        .delay-500 {
+            animation-delay: 500ms;
+        }
+
         @keyframes float {
 
             0%,
@@ -128,6 +156,72 @@
 
 <body class="antialiased relative overflow-x-hidden">
 
+    @if ($errors->any() || session('success') || session('error'))
+        <div id="systemModal"
+            class="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/40 backdrop-blur-sm transition-opacity">
+            <div class="glass-panel w-full max-w-md p-8 rounded-3xl shadow-2xl modal-animate relative m-4">
+
+                <button onclick="document.getElementById('systemModal').style.display='none'"
+                    class="absolute top-5 right-5 text-gray-400 hover:text-gray-800 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+
+                @if(session('success'))
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-ctech-green/20 text-ctech-green flex items-center justify-center mb-5 mx-auto shadow-inner">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-center text-ctech-dark mb-2">Success!</h3>
+                    <p class="text-center text-ctech-grey text-sm mb-6">{{ session('success') }}</p>
+                @endif
+
+                @if($errors->any() || session('error'))
+                    <div
+                        class="w-16 h-16 rounded-2xl bg-red-100 text-red-500 flex items-center justify-center mb-5 mx-auto shadow-inner">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-center text-ctech-dark mb-3">Action Required</h3>
+                    <div class="bg-red-50/50 rounded-xl p-4 border border-red-100 mb-6">
+                        @if(session('error'))
+                            <p class="text-red-500 text-sm font-semibold text-center">{{ session('error') }}</p>
+                        @endif
+                        @if($errors->any())
+                            <ul class="list-disc list-inside text-red-500 text-sm space-y-1">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+                @endif
+
+                <button onclick="document.getElementById('systemModal').style.display='none'"
+                    class="btn-ctech w-full py-3.5 rounded-xl font-bold text-sm">
+                    Acknowledge & Close
+                </button>
+            </div>
+        </div>
+
+        <script>
+            // Close modal on outside click
+            window.onclick = function (event) {
+                let modal = document.getElementById('systemModal');
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>
+    @endif
+
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div class="orb w-[500px] h-[500px] bg-ctech-cyan top-[-10%] left-[-10%]"></div>
         <div class="orb w-[400px] h-[400px] bg-ctech-green bottom-[-5%] right-[-5%]" style="animation-delay: -3s;">
@@ -140,7 +234,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <div class="flex items-center gap-3">
-                    <a href="{{ url('/') }}">
+                    <a href="{{ url('/') }}" class="transform transition hover:scale-105">
                         <img src="{{ asset('images/ctech-int-logo.png') }}" alt="Ctech Systems Logo"
                             class="h-10 w-auto object-contain">
                     </a>
@@ -187,18 +281,10 @@
                     <p class="text-sm text-ctech-grey">
                         &copy; 2026 <span class="text-ctech-cyan font-semibold">Ctech Systems</span> - Malawi.
                     </p>
-                    <p class="text-xs text-gray-400 mt-1 uppercase tracking-wider font-semibold">Center of Technology
-                        Innovations.</p>
-                </div>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-ctech-cyan transition text-sm">Privacy</a>
-                    <a href="#" class="text-gray-400 hover:text-ctech-cyan transition text-sm">Terms</a>
-                    <a href="#" class="text-gray-400 hover:text-ctech-cyan transition text-sm">Support</a>
                 </div>
             </div>
         </div>
     </footer>
-
 </body>
 
 </html>

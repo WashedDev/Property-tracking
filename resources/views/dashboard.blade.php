@@ -3,8 +3,9 @@
 @section('content')
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        <div class="lg:col-span-1">
-            <div class="glass-panel rounded-3xl p-8 sticky top-28 overflow-hidden relative">
+        <div class="lg:col-span-1 animate-fade-in-up">
+            <div
+                class="glass-panel rounded-3xl p-8 sticky top-28 overflow-hidden relative transition-all duration-300 hover:shadow-lg">
                 <div class="absolute -top-12 -right-12 w-32 h-32 bg-ctech-green rounded-full filter blur-3xl opacity-20">
                 </div>
 
@@ -16,7 +17,6 @@
 
                     <form method="POST" action="{{ route('properties.store') }}">
                         @csrf
-
                         <div class="mb-5">
                             <label class="block text-sm font-semibold text-ctech-grey mb-1.5">Property Name</label>
                             <input type="text" name="name" required placeholder="e.g. Office Car"
@@ -51,13 +51,13 @@
                         </div>
 
                         <div id="license_div" class="mb-5 hidden">
-                            <label class="block text-sm font-bold text-red-500 mb-1.5">License Plate (Required)</label>
+                            <label class="block text-sm font-bold text-red-500 mb-1.5">License Plate</label>
                             <input type="text" name="license_plate"
-                                class="glass-input w-full px-4 py-3 rounded-xl text-sm border-red-200 focus:border-red-400 focus:ring-red-100">
+                                class="glass-input w-full px-4 py-3 rounded-xl text-sm border-red-200 focus:border-red-400">
                         </div>
 
                         <button type="submit"
-                            class="btn-ctech w-full py-3.5 rounded-xl font-bold mt-4 tracking-wide text-sm">
+                            class="btn-ctech w-full py-3.5 rounded-xl font-bold mt-4 tracking-wide text-sm transform transition hover:-translate-y-1">
                             Save Property
                         </button>
                     </form>
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <div class="lg:col-span-2">
+        <div class="lg:col-span-2 animate-fade-in-up delay-200">
             <div class="glass-panel rounded-3xl overflow-hidden relative min-h-[500px]">
                 <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-ctech-cyan rounded-full filter blur-3xl opacity-20">
                 </div>
@@ -89,8 +89,9 @@
                             </tr>
                         </thead>
                         <tbody class="text-sm">
-                            @forelse($properties as $property)
-                                <tr class="border-b border-gray-100/50 hover:bg-white/40 transition duration-200">
+                            @forelse($properties as $index => $property)
+                                <tr class="border-b border-gray-100/50 hover:bg-white/60 transition-all duration-300 hover:shadow-sm hover:scale-[1.01] transform cursor-default animate-fade-in-up"
+                                    style="animation-delay: {{ 200 + ($index * 100) }}ms;">
                                     <td class="p-4">
                                         <div class="font-bold text-ctech-dark">{{ $property->name }}</div>
                                         <div class="text-xs text-gray-500 mt-1">{{ $property->model }}</div>
@@ -115,7 +116,8 @@
                             @empty
                                 <tr>
                                     <td colspan="4" class="p-12 text-center text-gray-400">
-                                        <div class="text-4xl mb-3 opacity-50">📦</div>
+                                        <div class="text-4xl mb-3 opacity-50 transform hover:scale-110 transition duration-500">
+                                            📦</div>
                                         <p class="font-medium text-ctech-grey">No properties registered yet.</p>
                                     </td>
                                 </tr>
