@@ -2,20 +2,18 @@
 
 @section('content')
     <div class="flex items-center justify-center min-h-[75vh]">
-        <div class="glass-panel w-full max-w-md p-10 rounded-3xl shadow-2xl relative overflow-hidden">
+        <div class="glass-panel w-full max-w-md p-10 rounded-3xl shadow-2xl relative overflow-hidden animate-fade-in-up">
 
             <div class="relative z-10">
                 <div class="text-center mb-8">
                     <img src="{{ asset('images/ctech-int-logo.png') }}" alt="Ctech Systems Logo"
-                        class="h-14 w-auto mx-auto mb-6 object-contain">
-
+                        class="h-14 w-auto mx-auto mb-6 object-contain transform hover:scale-105 transition duration-500">
                     <h2 class="text-2xl font-bold text-ctech-dark">Create Account</h2>
                     <p class="text-ctech-grey text-sm mt-2">Join the Ctech Property Portal</p>
                 </div>
 
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
-
                     <div class="mb-5">
                         <label for="name" class="block text-sm font-semibold text-ctech-grey mb-2">Full Name</label>
                         <input id="name" type="text" name="name" required autofocus
@@ -42,7 +40,7 @@
                     </div>
 
                     <button type="submit"
-                        class="btn-ctech w-full py-3.5 px-4 rounded-xl shadow-lg transform transition hover:scale-[1.02]">
+                        class="btn-ctech w-full py-3.5 px-4 rounded-xl shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl">
                         Register Account
                     </button>
                 </form>
