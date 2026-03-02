@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
 {
@@ -16,8 +17,15 @@ class AdminController extends Controller
         return view('admin.dashboard', compact('users'));
     }
 
-    public function showUserProperties(User $user)
+    public function generateContract(User $user)
     {
-        return view('admin.user-details', compact('user'));
+        // Ensure properties are loaded
+        $user->load('properties');
+
+        // Load the specialized PDF view and pass the user data
+        $pdf = Pdf::loadView('admin.pdf_contract', compact('user'));
+
+        // Return the PDF for download with a professional filename
+        return $pdf->download('Ctech_Contract_' . str_replace(' ', '_', $user->name) . '.pdf');
     }
 }

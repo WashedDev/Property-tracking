@@ -3,96 +3,102 @@
 @section('content')
     <div class="max-w-7xl mx-auto">
 
-        <!-- Stats Cards -->
+        <div class="mb-8 flex items-center gap-5 glass-panel px-6 py-4 rounded-3xl w-fit">
+            <img src="{{ asset('images/ctech-int-logo.png') }}" alt="Ctech Systems Logo" class="h-12 w-auto object-contain">
+            <div class="border-l-2 border-gray-200 pl-5">
+                <h2 class="text-2xl font-bold text-ctech-dark tracking-tight">Admin Dashboard</h2>
+                <p class="text-ctech-grey text-sm font-medium mt-0.5">System Overview & Management</p>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden">
-                <div
-                    class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-green-300 to-green-500 rounded-full mix-blend-multiply filter blur-2xl opacity-30">
+            <div
+                class="glass-panel rounded-3xl p-6 relative overflow-hidden shadow-sm hover:shadow-md transition duration-300">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-ctech-cyan rounded-full filter blur-3xl opacity-20">
                 </div>
                 <div class="relative z-10">
-                    <div class="text-gray-500 text-sm font-semibold mb-2">Total Personnel</div>
-                    <div class="text-4xl font-bold text-gray-800">{{ $users->count() }}</div>
-                    <div class="text-emerald-600 text-xs mt-2 font-semibold">↑ Active Employees</div>
+                    <div class="text-ctech-grey text-sm font-semibold mb-2 uppercase tracking-wide">Total Personnel</div>
+                    <div class="text-4xl font-bold text-ctech-dark">{{ $users->count() }}</div>
+                    <div class="text-ctech-cyan text-xs mt-2 font-bold">↑ Active Employees</div>
                 </div>
             </div>
 
-            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden">
-                <div
-                    class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-blue-300 to-blue-500 rounded-full mix-blend-multiply filter blur-2xl opacity-30">
+            <div
+                class="glass-panel rounded-3xl p-6 relative overflow-hidden shadow-sm hover:shadow-md transition duration-300">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-ctech-green rounded-full filter blur-3xl opacity-20">
                 </div>
                 <div class="relative z-10">
-                    <div class="text-gray-500 text-sm font-semibold mb-2">Active Assets</div>
-                    <div class="text-4xl font-bold text-gray-800">{{ $users->sum(fn($u) => $u->properties->count()) }}</div>
-                    <div class="text-blue-600 text-xs mt-2 font-semibold">↑ Total Items</div>
+                    <div class="text-ctech-grey text-sm font-semibold mb-2 uppercase tracking-wide">Active Assets</div>
+                    <div class="text-4xl font-bold text-ctech-dark">{{ $users->sum(fn($u) => $u->properties->count()) }}
+                    </div>
+                    <div class="text-ctech-green text-xs mt-2 font-bold">↑ Total Items</div>
                 </div>
             </div>
 
-            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden">
-                <div
-                    class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-purple-300 to-purple-500 rounded-full mix-blend-multiply filter blur-2xl opacity-30">
-                </div>
+            <div
+                class="glass-panel rounded-3xl p-6 relative overflow-hidden shadow-sm hover:shadow-md transition duration-300">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-300 rounded-full filter blur-3xl opacity-30"></div>
                 <div class="relative z-10">
-                    <div class="text-gray-500 text-sm font-semibold mb-2">Contracts Generated</div>
-                    <div class="text-4xl font-bold text-gray-800">{{ $users->count() }}</div>
-                    <div class="text-purple-600 text-xs mt-2 font-semibold">↑ Ready to Export</div>
+                    <div class="text-ctech-grey text-sm font-semibold mb-2 uppercase tracking-wide">Contracts Generated
+                    </div>
+                    <div class="text-4xl font-bold text-ctech-dark">{{ $users->count() }}</div>
+                    <div class="text-blue-500 text-xs mt-2 font-bold">↑ Ready to Export</div>
                 </div>
             </div>
         </div>
 
-        <!-- Main Table -->
-        <div class="glass-panel rounded-3xl overflow-hidden relative border border-white/50 shadow-2xl">
-            <!-- Decorative Glow -->
+        <div class="glass-panel rounded-3xl overflow-hidden relative border border-white/60 min-h-[400px]">
             <div
-                class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-300 to-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20">
+                class="absolute -bottom-24 -right-24 w-64 h-64 bg-ctech-cyan rounded-full filter blur-[80px] opacity-15 pointer-events-none">
             </div>
 
-            <div class="p-6 border-b border-gray-200 bg-white/50 flex items-center justify-between relative z-10">
+            <div class="p-6 border-b border-white/60 bg-white/30 flex items-center justify-between relative z-10">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <span class="w-2 h-6 bg-gradient-to-b from-emerald-400 to-emerald-600 rounded-full"></span>
+                    <h3 class="text-lg font-bold text-ctech-dark uppercase tracking-wider flex items-center gap-3">
+                        <span class="w-1.5 h-6 bg-gradient-to-b from-ctech-cyan to-ctech-green rounded-full"></span>
                         Employee Property Registry
                     </h3>
-                    <p class="text-gray-500 text-sm mt-1">Manage employee assets and generate contracts</p>
+                    <p class="text-ctech-grey text-sm mt-1">Manage employee assets and generate contracts</p>
                 </div>
             </div>
 
-            <div class="overflow-x-auto relative z-10">
+            <div class="overflow-x-auto relative z-10 p-2">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="text-gray-500 text-xs uppercase tracking-wider bg-gray-100/80 border-b border-gray-200">
+                        <tr class="text-ctech-grey text-xs uppercase tracking-wider border-b border-gray-200/50">
                             <th class="p-5 font-semibold">Employee Name & Contact</th>
                             <th class="p-5 font-semibold text-center">Items Assigned</th>
                             <th class="p-5 font-semibold text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="text-sm divide-y divide-gray-100">
+                    <tbody class="text-sm">
                         @forelse($users as $user)
-                            <tr class="hover:bg-emerald-50/50 transition duration-200 group">
+                            <tr class="border-b border-gray-100/50 hover:bg-white/50 transition duration-200 group">
                                 <td class="p-5">
-                                    <div class="flex items-center gap-3">
+                                    <div class="flex items-center gap-4">
                                         <div
-                                            class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold shadow-lg">
+                                            class="w-12 h-12 rounded-2xl bg-gradient-to-br from-ctech-cyan to-ctech-green flex items-center justify-center text-white font-bold shadow-md text-lg transform group-hover:scale-105 transition duration-300">
                                             {{ substr($user->name, 0, 1) }}
                                         </div>
                                         <div>
                                             <div
-                                                class="font-bold text-gray-800 text-base group-hover:text-emerald-600 transition">
+                                                class="font-bold text-ctech-dark text-base group-hover:text-ctech-cyan transition">
                                                 {{ $user->name }}
                                             </div>
-                                            <div class="text-gray-500 text-sm">{{ $user->email }}</div>
+                                            <div class="text-ctech-grey text-xs mt-0.5">{{ $user->email }}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="p-5 text-center">
                                     <span
-                                        class="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-700 border border-blue-200 font-semibold">
+                                        class="inline-flex items-center px-4 py-1.5 rounded-full bg-white/80 text-ctech-cyan border border-ctech-cyan/20 font-bold text-xs shadow-sm">
                                         {{ $user->properties->count() }} Assets
                                     </span>
                                 </td>
                                 <td class="p-5 text-right">
                                     <div class="flex justify-end gap-2">
                                         <a href="{{ route('admin.contract', $user->id) }}"
-                                            class="inline-flex items-center gap-2 btn-ctech px-5 py-2.5 rounded-xl font-semibold transition transform hover:-translate-y-0.5 shadow-lg">
+                                            class="inline-flex items-center gap-2 btn-ctech px-5 py-2.5 rounded-xl text-sm font-semibold transition shadow-md">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -106,9 +112,9 @@
                         @empty
                             <tr>
                                 <td colspan="3" class="p-20 text-center">
-                                    <div class="text-gray-400 text-6xl mb-4">👥</div>
-                                    <div class="text-gray-500 font-semibold mb-2">No employee records found.</div>
-                                    <p class="text-sm text-gray-400">New employees will appear here once they register.</p>
+                                    <div class="text-gray-300 text-6xl mb-4 opacity-70">👥</div>
+                                    <div class="text-ctech-dark font-bold mb-2 text-lg">No employee records found.</div>
+                                    <p class="text-sm text-ctech-grey">New employees will appear here once they register.</p>
                                 </td>
                             </tr>
                         @endforelse
