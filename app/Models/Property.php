@@ -15,6 +15,11 @@ class Property extends Model
         'type',
         'license_plate',
         'user_id',
-        'status'
+        'status',
+        'procurement_date',
+        'warranty_expiration',
+        'estimated_value',
+        'image_path'
+
     ];
 }
