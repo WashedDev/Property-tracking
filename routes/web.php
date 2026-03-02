@@ -1,7 +1,38 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\AdminController;
+
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.register');
+});
+
+// Registration
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+
+// Login
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth'])->group(function () {
+    // Shared Logout
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Employee Routes
+    Route::get('/dashboard', [PropertyController::class, 'index'])->name('dashboard');
+    Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
+    Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
+
+    // Admin Routes
+    Route::middleware(['admin'])->prefix('admin')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+        Route::get('/contract/{user}', [AdminController::class, 'generateContract'])->name('admin.contract');
+    });
 });
