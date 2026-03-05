@@ -109,9 +109,10 @@
                                             </button>
                                         </form>
                                     @else
-                                        <button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-lg text-xs font-semibold transition-colors">
-                                            Report Issue
-                                        </button>
+                                        <button onclick="openTicketModal({{ $property->id }}, '{{ addslashes($property->name) }}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-lg text-xs font-semibold transition-colors">
+                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                         Report Issue
+                                          </button>
                                     @endif
                                 </td>
                             </tr>
@@ -171,6 +172,91 @@
         </div>
     </div>
 
+    <div id="ticketModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm transition-opacity">
+    <div class="card-panel w-full max-w-md p-6 sm:p-8 modal-animate relative">
+        <button onclick="document.getElementById('ticketModal').style.display='none'" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <div class="mb-6">
+            <h3 class="text-xl font-bold text-ctech-dark flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                Report an Issue
+            </h3>
+            <p class="text-slate-500 text-sm mt-1">Submit a maintenance or repair request for: <br><span id="ticket_property_name" class="font-bold text-slate-700"></span></p>
+        </div>
+
+        <form id="ticketForm" method="POST" action="">
+            @csrf
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-slate-600 mb-1.5">Issue Category</label>
+                <select name="category" required class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm cursor-pointer">
+                    <option value="Hardware Failure">Hardware Failure / Damage</option>
+                    <option value="Software Issue">Software / Login Issue</option>
+                    <option value="Routine Maintenance">Routine Maintenance (e.g. Car Service)</option>
+                    <option value="Lost or Stolen">Lost or Stolen</option>
+                </select>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-slate-600 mb-1.5">Description</label>
+                <textarea name="description" required rows="4" placeholder="Please describe the issue in detail..." class="sleek-input w-full px-4 py-3 rounded-xl text-sm resize-none"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold text-sm transition-colors shadow-sm">
+                Submit Support Ticket
+            </button>
+        </form>
+    </div>
+</div>
+
+<div id="ticketModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm transition-opacity">
+    <div class="card-panel w-full max-w-md p-6 sm:p-8 modal-animate relative">
+        <button onclick="document.getElementById('ticketModal').style.display='none'" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <div class="mb-6">
+            <h3 class="text-xl font-bold text-ctech-dark flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                Report an Issue
+            </h3>
+            <p class="text-slate-500 text-sm mt-1">Submit a maintenance or repair request for: <br><span id="ticket_property_name" class="font-bold text-slate-700"></span></p>
+        </div>
+
+        <form id="ticketForm" method="POST" action="">
+            @csrf
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-slate-600 mb-1.5">Issue Category</label>
+                <select name="category" required class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm cursor-pointer">
+                    <option value="Hardware Failure">Hardware Failure / Damage</option>
+                    <option value="Software Issue">Software / Login Issue</option>
+                    <option value="Routine Maintenance">Routine Maintenance (e.g. Car Service)</option>
+                    <option value="Lost or Stolen">Lost or Stolen</option>
+                </select>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-slate-600 mb-1.5">Description</label>
+                <textarea name="description" required rows="4" placeholder="Please describe the issue in detail..." class="sleek-input w-full px-4 py-3 rounded-xl text-sm resize-none"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold text-sm transition-colors shadow-sm">
+                Submit Support Ticket
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Handles opening the Report Issue Modal dynamically
+    function openTicketModal(propertyId, propertyName) {
+        event.stopPropagation(); // Prevents the details modal from opening at the same time
+        document.getElementById('ticket_property_name').textContent = propertyName;
+        document.getElementById('ticketForm').action = '/properties/' + propertyId + '/tickets';
+        document.getElementById('ticketModal').style.display = 'flex';
+    }
+</script>
     <script>
         // Populate and open the details modal
         function openAssetModal(property) {

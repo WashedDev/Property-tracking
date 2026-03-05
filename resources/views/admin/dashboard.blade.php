@@ -49,7 +49,8 @@
                     <div>
                         <div class="text-slate-500 text-xs sm:text-sm font-semibold mb-1">Active Assets</div>
                         <div class="text-2xl sm:text-3xl font-bold text-ctech-dark">
-                            {{ $users->sum(fn($u) => $u->properties->count()) }}</div>
+                            {{ $users->sum(fn($u) => $u->properties->count()) }}
+                        </div>
                     </div>
                     <div
                         class="w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-green-50 flex items-center justify-center text-ctech-green">
@@ -108,7 +109,8 @@
                                         </div>
                                         <div>
                                             <div class="font-bold text-ctech-dark text-sm sm:text-base whitespace-nowrap">
-                                                {{ $user->name }}</div>
+                                                {{ $user->name }}
+                                            </div>
                                             <div class="text-slate-500 text-[10px] sm:text-xs mt-0.5">{{ $user->email }}</div>
                                         </div>
                                     </div>
@@ -151,6 +153,229 @@
                     </tbody>
                 </table>
             </div>
+
+
+        </div>
+
+        <div class="card-panel overflow-hidden animate-fade-in-up delay-500 mt-8">
+            <div class="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between bg-red-50/30">
+                <h3 class="text-base sm:text-lg font-bold text-ctech-dark flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                    Maintenance & Support Tickets
+                </h3>
+                <span class="bg-red-100 text-red-600 text-xs px-2.5 py-1 rounded-md font-bold">
+                    {{ $tickets->where('status', '!=', 'Resolved')->count() }} Active
+                </span>
+            </div>
+
+            <div class="overflow-x-auto w-full">
+                <table class="w-full text-left border-collapse min-w-[700px]">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                            <th class="p-4 sm:p-5 font-semibold">Asset & Employee</th>
+                            <th class="p-4 sm:p-5 font-semibold">Issue Details</th>
+                            <th class="p-4 sm:p-5 font-semibold">Status</th>
+                            <th class="p-4 sm:p-5 font-semibold text-right">Update Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        @forelse($tickets as $ticket)
+                            <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                                <td class="p-4 sm:p-5">
+                                    <div class="font-bold text-ctech-dark">{{ $ticket->property->name }}</div>
+                                    <div class="text-xs text-slate-500 mt-0.5">Reported by: {{ $ticket->user->name }}</div>
+                                </td>
+                                <td class="p-4 sm:p-5">
+                                    <span
+                                        class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-[10px] font-bold uppercase tracking-wide">{{ $ticket->category }}</span>
+                                    <div class="text-xs text-slate-600 mt-1.5 truncate max-w-[200px]"
+                                        title="{{ $ticket->description }}">
+                                        "{{ $ticket->description }}"
+                                    </div>
+                                </td>
+                                <td class="p-4 sm:p-5">
+                                    @if($ticket->status === 'Open')
+                                        <span
+                                            class="text-red-500 font-bold text-xs bg-red-50 px-2 py-1 rounded border border-red-100">Open</span>
+                                    @elseif($ticket->status === 'In Progress')
+                                        <span
+                                            class="text-amber-500 font-bold text-xs bg-amber-50 px-2 py-1 rounded border border-amber-100">In
+                                            Progress</span>
+                                    @else
+                                        <span
+                                            class="text-ctech-green font-bold text-xs bg-green-50 px-2 py-1 rounded border border-green-100">Resolved</span>
+                                    @endif
+                                </td>
+                                <td class="p-4 sm:p-5 text-right">
+                                    @if($ticket->status !== 'Resolved')
+                                        <form action="{{ route('admin.tickets.update', $ticket->id) }}" method="POST"
+                                            class="inline-flex gap-2">
+                                            @csrf
+                                            @method('PATCH')
+                                            <select name="status" onchange="this.form.submit()"
+                                                class="sleek-input px-2 py-1.5 rounded-lg text-xs font-semibold cursor-pointer">
+                                                <option value="Open" {{ $ticket->status == 'Open' ? 'selected' : '' }}>Open</option>
+                                                <option value="In Progress" {{ $ticket->status == 'In Progress' ? 'selected' : '' }}>
+                                                    In Progress</option>
+                                                <option value="Resolved">Mark Resolved</option>
+                                            </select>
+                                        </form>
+                                    @else
+                                        <span class="text-slate-400 text-xs font-semibold">Closed</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="p-10 text-center text-slate-500 text-sm">No active support tickets.
+                                    Everything is running smoothly! 🎉</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-panel overflow-hidden animate-fade-in-up delay-500 mt-8">
+            <div class="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between">
+                <h3 class="text-base sm:text-lg font-bold text-ctech-dark flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                    Master Asset Inventory
+                </h3>
+            </div>
+
+            <div class="overflow-x-auto w-full">
+                <table class="w-full text-left border-collapse min-w-[800px]">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                            <th class="p-4 sm:p-5 font-semibold">Asset Details</th>
+                            <th class="p-4 sm:p-5 font-semibold">Assigned To</th>
+                            <th class="p-4 sm:p-5 font-semibold">Status</th>
+                            <th class="p-4 sm:p-5 font-semibold text-right">Management</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        @foreach($properties as $property)
+                            <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                                <td class="p-4 sm:p-5">
+                                    <div class="font-bold text-ctech-dark">{{ $property->name }}</div>
+                                    <div class="text-xs text-slate-500 mt-0.5">SN/Plate: <span
+                                            class="font-mono">{{ $property->serial_number ?? $property->license_plate }}</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 sm:p-5">
+                                    <span
+                                        class="font-semibold text-slate-700">{{ $property->user->name ?? 'Unassigned' }}</span>
+                                </td>
+                                <td class="p-4 sm:p-5">
+                                    <span
+                                        class="px-2.5 py-1 rounded-md text-xs font-semibold border 
+                                                        {{ $property->status == 'Retired' ? 'bg-slate-100 text-slate-600 border-slate-200' : 'bg-green-50 text-ctech-green border-green-100' }}">
+                                        {{ $property->status }}
+                                    </span>
+                                </td>
+                                <td class="p-4 sm:p-5 text-right space-x-2">
+                                    <button
+                                        onclick="openHistoryModal({{ $property->histories->toJson() }}, '{{ addslashes($property->name) }}')"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 rounded-lg text-xs font-semibold transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Audit Log
+                                    </button>
+                                    <button onclick="openEditModal({{ $property->toJson() }})"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 rounded-lg text-xs font-semibold transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                            </path>
+                                        </svg>
+                                        Edit / Reassign
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="editModal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm transition-opacity">
+        <div class="card-panel w-full max-w-lg p-6 sm:p-8 relative">
+            <button onclick="document.getElementById('editModal').style.display='none'"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <h3 class="text-xl font-bold text-ctech-dark mb-4">Edit Asset Details</h3>
+
+            <form id="editForm" method="POST" action="">
+                @csrf
+                @method('PATCH')
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-semibold text-slate-600 mb-1">Asset Name</label>
+                        <input type="text" name="name" id="edit_name" required
+                            class="sleek-input w-full px-4 py-2 rounded-lg text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1">Type</label>
+                        <input type="text" name="type" id="edit_type" required
+                            class="sleek-input w-full px-4 py-2 rounded-lg text-sm bg-slate-50" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1">Model</label>
+                        <input type="text" name="model" id="edit_model" required
+                            class="sleek-input w-full px-4 py-2 rounded-lg text-sm">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-semibold text-slate-600 mb-1">Reassign Employee</label>
+                        <select name="user_id" id="edit_user_id" class="sleek-input w-full px-4 py-2 rounded-lg text-sm">
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-span-2 p-3 bg-red-50 border border-red-100 rounded-lg mt-2">
+                        <label class="block text-sm font-bold text-red-600 mb-1">Asset Status (Danger Zone)</label>
+                        <select name="status" id="edit_status"
+                            class="sleek-input w-full px-4 py-2 rounded-lg text-sm border-red-200 text-red-700">
+                            <option value="Active">Active / Healthy</option>
+                            <option value="Pending Acknowledgment">Pending User Acknowledgment</option>
+                            <option value="Needs Attention">Needs Attention / Repair</option>
+                            <option value="Retired">Retired / Destroyed / Lost</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-ctech w-full py-3 rounded-xl font-semibold text-sm">Save Changes & Log
+                    History</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="historyModal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm transition-opacity">
+        <div class="card-panel w-full max-w-lg p-6 sm:p-8 relative max-h-[80vh] overflow-y-auto">
+            <button onclick="document.getElementById('historyModal').style.display='none'"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <h3 class="text-xl font-bold text-ctech-dark mb-1">Audit Trail</h3>
+            <p class="text-sm text-slate-500 mb-6" id="history_asset_name"></p>
+
+            <div class="space-y-4 border-l-2 border-slate-100 ml-3 pl-4" id="history_timeline">
+            </div>
         </div>
     </div>
 
@@ -189,19 +414,19 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Property Name</label>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Property Name*</label>
                         <input type="text" name="name" required placeholder="e.g. Work MacBook"
                             class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Model</label>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Model*</label>
                         <input type="text" name="model" required placeholder="e.g. Pro 14-inch"
                             class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Type</label>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Type*</label>
                         <select name="type" id="admin_property_type" onchange="toggleAdminVehicleFields()"
                             class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm cursor-pointer">
                             <option value="Electronics">Electronics</option>
@@ -211,7 +436,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Quantity</label>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1.5">Quantity*</label>
                         <input type="number" name="quantity" value="1" min="1"
                             class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm">
                     </div>
@@ -241,8 +466,8 @@
                         </div>
 
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-semibold text-slate-600 mb-1.5">Estimated Value (MWK)</label>
-                            <input type="number" step="0.01" name="estimated_value" placeholder="e.g. 1500000"
+                            <label class="block text-sm font-semibold text-slate-600 mb-1.5">Estimated Value (MWK)*</label>
+                            <input type="number" step="0.01" required name="estimated_value" placeholder="e.g. 1500000"
                                 class="sleek-input w-full px-4 py-2.5 rounded-xl text-sm">
                         </div>
                     </div>
@@ -275,6 +500,8 @@
             }
         }
 
+
+
         // Close modal if user clicks on the backdrop outside the card
         document.addEventListener('click', function (event) {
             let assignModal = document.getElementById('assignModal');
@@ -282,5 +509,44 @@
                 assignModal.style.display = "none";
             }
         });
+    </script>
+
+
+    <script>
+        function openEditModal(property) {
+            document.getElementById('editForm').action = '/admin/properties/' + property.id;
+            document.getElementById('edit_name').value = property.name;
+            document.getElementById('edit_model').value = property.model;
+            document.getElementById('edit_type').value = property.type;
+            document.getElementById('edit_user_id').value = property.user_id;
+            document.getElementById('edit_status').value = property.status;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function openHistoryModal(histories, assetName) {
+            document.getElementById('history_asset_name').innerText = "History for: " + assetName;
+            const timeline = document.getElementById('history_timeline');
+            timeline.innerHTML = ''; // Clear previous
+
+            if (histories.length === 0) {
+                timeline.innerHTML = '<p class="text-sm text-slate-500 italic">No history logs found for this asset.</p>';
+            } else {
+                histories.forEach(log => {
+                    const date = new Date(log.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const adminName = log.user ? log.user.name : 'System';
+
+                    timeline.innerHTML += `
+                        <div class="relative">
+                            <div class="absolute -left-[25px] top-1 w-3 h-3 bg-blue-500 rounded-full border-2 border-white"></div>
+                            <div class="text-xs font-bold text-blue-500 mb-0.5">${date}</div>
+                            <div class="text-sm font-semibold text-slate-800">${log.action}</div>
+                            <div class="text-xs text-slate-500 mt-1">${log.notes || ''}</div>
+                            <div class="text-[10px] text-slate-400 mt-1 font-mono">Logged by: ${adminName}</div>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('historyModal').style.display = 'flex';
+        }
     </script>
 @endsection
