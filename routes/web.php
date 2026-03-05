@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TicketController;
 
 
 Route::get('/', function () {
@@ -31,14 +32,22 @@ Route::middleware(['auth'])->group(function () {
     // Digital Acknowledgment Route
     Route::patch('/properties/{property}/acknowledge', [App\Http\Controllers\PropertyController::class, 'acknowledge'])->name('properties.acknowledge');
 
+    // Ticketing Routes
+    Route::post('/properties/{property}/tickets', [App\Http\Controllers\TicketController::class, 'store'])->name('tickets.store');
+    Route::patch('/admin/tickets/{ticket}', [App\Http\Controllers\TicketController::class, 'update'])->name('admin.tickets.update');
+
     // Employee Routes
     Route::get('/dashboard', [PropertyController::class, 'index'])->name('dashboard');
     Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
     Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
 
+
     // Admin Routes
     Route::middleware(['admin'])->prefix('admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
         Route::get('/contract/{user}', [AdminController::class, 'generateContract'])->name('admin.contract');
+
+        // FIX: Removed the extra '/admin' from the start of the URL string
+        Route::patch('/properties/{property}', [App\Http\Controllers\PropertyController::class, 'update'])->name('admin.properties.update');
     });
 });
