@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TicketController;
+use Illuminate\Support\Facades\Password;
+use App\Http\Controllers\PasswordResetController;
 
 
 Route::get('/', function () {
@@ -21,6 +23,12 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+//password reset routes
+Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequestForm'])->middleware('guest')->name('password.request');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])->middleware('guest')->name('password.email');
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->middleware('guest')->name('password.reset');
+Route::post('/reset-password', [PasswordResetController::class, 'reset'])->middleware('guest')->name('password.update');
 
 Route::middleware(['auth'])->group(function () {
     // Shared Logout

@@ -32,7 +32,8 @@
                             class="w-4 h-4 rounded border-slate-300 text-ctech-cyan focus:ring-ctech-cyan">
                         <label for="remember" class="ml-2 block text-sm text-slate-600 font-medium">Remember me</label>
                     </div>
-                    <a class="text-sm text-ctech-cyan hover:text-ctech-dark font-medium transition" href="#">Forgot
+                    <a class="text-sm text-ctech-cyan hover:text-ctech-dark font-medium transition"
+                        href="{{ route('password.request') }}">Forgot
                         password?</a>
                 </div>
 
